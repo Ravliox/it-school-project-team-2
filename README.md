@@ -47,7 +47,7 @@ Puteti vizualiza ce returneaza fiecare API daca intrati pe linkuri in Firefox:
 
 * [/admin](https://us-central1-imw-api.cloudfunctions.net/api/millionaire/admin) - **GET** pe acest api va returna setarile intregului joc, iar **POST** pe acest api va schimba setarile. Cand dati post trebuie sa trimiteti **un obiect de aceeasi forma cu campurile schimbate**.
 
-* daca dati **POST** pe /admin cu un obiect gol de exemplu, atunci toate setarile voastre vor fi date peste cap. Pentru a le reseta veti da **POST** pe [/reset](https://us-central1-imw-api.cloudfunctions.net/api/millionaire/admin/reset)
+* daca dati **POST** pe /admin cu un obiect gol de exemplu, atunci toate setarile voastre vor fi date peste cap. Pentru a le reseta veti da **POST** pe [/admin/reset](https://us-central1-imw-api.cloudfunctions.net/api/millionaire/admin/reset)
 
 * [/game/current-round](https://us-central1-imw-api.cloudfunctions.net/api/millionaire/game/current-round) **GET** pe acest api returneaza indexul intrebarii la care va aflati si numarul total de intrebari. Acesta este folosit pentru persistenta si sa stiti cand va opriti
 
