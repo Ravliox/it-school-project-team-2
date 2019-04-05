@@ -11,6 +11,7 @@ Pe /admin veti administra jocul si pe /game il veti juca.
 ## Reguli
 
 * din **ruta de administrare** trebuie sa pot seta
+
    **lista de intrebari**
    
    **raspunsurile** fiecare intrebari, si **indexul** raspunsului corect
