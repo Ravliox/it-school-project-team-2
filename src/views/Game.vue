@@ -1,5 +1,8 @@
 <template>
-    
+    <div>
+        <br><br>
+        <router-link to="/" tag="button" >Admin</router-link>  
+    </div>
 </template>
 
 <script>
