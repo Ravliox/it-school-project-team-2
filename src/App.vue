@@ -4,12 +4,14 @@
   </div>
 </template>
 
-<script>
-export default {
-  
-}
-</script>
 
+<script>
+import api from '@/API.js'
+
+export default {
+}
+
+</script>
 
 <style lang="scss">
 #app {
