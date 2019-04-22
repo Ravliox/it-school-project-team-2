@@ -1,5 +1,3 @@
-
-
 <template>
   <div id="app">
     <router-view/>
@@ -11,14 +9,6 @@
 import api from '@/API.js'
 
 export default {
-   data() {
-        return {
-            indexOfNextRound: 0
-        }
-    },
-  created() {
-
-  }
 }
 
 </script>

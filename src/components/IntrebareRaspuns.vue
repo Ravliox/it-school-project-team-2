@@ -1,55 +1,75 @@
 <template>
     <div class = "container">
-        <div class = "intrebare">{{question}}</div>
+        <HelpingButtons @fiftyFifty='fiftyFiftyHandler()' :helperDetails="helperButtonsDetails" />
+        <div class = "intrebare">
+            <b-loading :is-full-page="false" :active.sync="loading"></b-loading>    
+            {{question}}
+        </div>
         <div class = "raspuns-container">
-            <button @click="verificare(index, correctAnswerIndex, currentQuestion, answers, runda)" class="raspuns-button" v-for="(answers, index) in answers" :key="index"> {{answers}} </button>
+            <button @click="verificare(index)" class="raspuns-button" v-for="(answer, index) in answers" :key="index"> 
+                {{ answer }} 
+            </button>
         </div>
     </div>
-
-
 </template>
 
 <script>
 import api from '@/API.js'
+import HelpingButtons from '@/components/HelpingButtons.vue'
+
 export default {
+    props: [
+        'currentQuestion',
+        'totalQuestions'
+    ],
+    components: {
+        HelpingButtons
+    },
     data() {
         return {
-        answers: ["","","",""],
-        question: "",
-        correctAnswerIndex: "",
-        currentQuestion: "",
-        runda:"1",
-        api
+            answers: [],
+            question: "",
+            correctAnswerIndex: null,
+            api,
+            loading: true,
+            helperButtonsDetails: {
+                callAFriend: true,
+                fiftyFifty: true,
+                askPublic: true,
+                correctAnswerIndex: null,
+                correctAnswer: ''
+            }
         } 
     },
-    
     created() {
-        this.$http.get(`${api}/game/current-round`).then(response => {
-            this.currentQuestion = response.body.currentQuestion;
-            this.$http.get(`${api}/game/round/${response.body.currentQuestion}`).then(
-                response => {
-                    this.answers = response.body.round.answers;
-                    this.question = response.body.round.question;
-                    this.correctAnswerIndex = response.body.round.correctAnswerIndex;                    
-                }
-            )
-        })
+        this.$http.get(`${api}/game/round/${this.currentQuestion}`).then(
+            response => {
+                this.answers = response.body.round.answers;
+                this.question = response.body.round.question;
+                this.correctAnswerIndex = response.body.round.correctAnswerIndex;
+                this.helperButtonsDetails.correctAnswerIndex = this.correctAnswerIndex;
+                this.helperButtonsDetails.correctAnswer = this.answers[this.correctAnswerIndex]; 
 
+                this.loading = false;                
+            }
+        )
     },
-
     methods: {
-        verificare(index, correctAnswerIndex,currentQuestion, answers,runda) {
-            runda = currentQuestion + 1; 
-            if(correctAnswerIndex===index){
-                this.$http.get(`${api}/game/round/${runda}`).then(response  => {
+        verificare(index) {
+            if(this.correctAnswerIndex == index) {
+                this.currentQuestion = this.currentQuestion + 1; 
+                this.$http.get(`${api}/game/round/${this.currentQuestion}`).then(response  => {
                     this.answers = response.body.round.answers;
                     this.question = response.body.round.question;
                     this.correctAnswerIndex = response.body.round.correctAnswerIndex;
-                })
-                this.$http.get(`${api}/game/current-round`).then(response => {
-                    this.currentQuestion = response.body.currentQuestion;
-                })    
+
+                    this.helperButtonsDetails.correctAnswerIndex = this.correctAnswerIndex;  
+                    this.helperButtonsDetails.correctAnswer = this.answers[this.correctAnswerIndex];   
+                })   
             }
+        },
+        fiftyFiftyHandler() {
+            //to be done
         }
     }
 }
@@ -59,13 +79,13 @@ export default {
 .container {
     background-color: #333;
     width:1001px;
-    height:340px;
+
 }
 
 .intrebare{
-    width:1001px;
     height:50px;
     background-color:gray;
+    
     align-items:center;
     display:flex;
     align-items:center;
@@ -77,8 +97,6 @@ export default {
 .raspuns-container{
     
     margin: 40px;
-    width:961px;
-    height:198px;
     background-color:#333;
     display:grid;
     grid-template-columns: 450px 450px;
@@ -98,5 +116,9 @@ export default {
     font-size:40px;
     font-family:sans-serif;
   }
+
+
+
+
 
 </style>
