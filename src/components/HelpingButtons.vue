@@ -1,78 +1,58 @@
 <template>
-    <div id class = "container">
-        <div id = "call-friend-banner-hidden" v-if=callFriendAppear > 
-            Raspunsul corect este: {{questions[currentQuestion].correctAnswerIndex}};
-            <a class="button is-warning" @click=callFriendBannerDisappear()>Continue Game</a>
-        </div>
-        <div id = "ask-public-banner-hidden" v-if=askPublicAppear>
-            Publicul spune ca raspunsul corect este: {{questions[currentQuestion].correctAnswerIndex}};
-            <a class="button is-warning" @click=askPublicBannerDisappear()>Continue Game</a>
+    <div id="helping-buttons" class = "buttons">
+        <div class="helping-buttons">
+            <a class="button is-warning" id="call-friend-button" :disabled="!helperDetails.callAFriend" @click="callFriend()">Call Friend</a>
+            <a class="button is-warning" id="ask-public-button" :disabled="!helperDetails.askPublic" @click="askPublic()" >Ask the Public</a>
+            <a class="button is-warning" id="fifty-fifty-button" :disabled="!helperDetails.fiftyFifty" @click="fiftyFifty()"> 50:50 </a>
         </div>
 
-        <div class="helping-buttons">
-            <a class="button is-warning" id="call-friend-button" enabled:"callFriendEnabled" @click=callFriend()>Call Friend</a>
-            <a class="button is-warning" id="ask-public-button" enabled:"askPublicEnabled" @click=askPublic() >askPublic()</a>
-            <a class="button is-warning" id="fifty-fifty-button" enabled:"fiftyFiftyEnabled" @click=fiftyFifty()> 50:50 </a>
+        <div id = "call-friend-banner-hidden" v-if="callFriendAppear" > 
+            Raspunsul corect este: {{ helperDetails.correctAnswer }};
+            <a class="button is-warning" @click="callFriendBannerDisappear()">Continue Game</a>
+        </div>
+        <div id = "ask-public-banner-hidden" v-if="askPublicAppear">
+            Publicul spune ca raspunsul corect este: {{ helperDetails.correctAnswer }};
+            <a class="button is-warning" @click="askPublicBannerDisappear()">Continue Game</a>
         </div>
     </div>    
 </template>
 
 <script>
-import api from '@API.js';
+import api from '@/API.js';
 export default {
+    props: [
+        'helperDetails'
+    ],
     data() {
         return {
-            callFriendAppear:false,
-            askPublicAppear:false
+            callFriendAppear: false,
+            askPublicAppear: false,
         }
     },
-    // created() {
-    //     this.$http.get(`${api}/admin`).then(data => {
-    //         var questions = data.body.questions;
-    //     }),
-    //     this.$http.get(`${api}/game/current-round`).then(data => {
-    //         var currentQuestion = data.body.currentQuestion;
-    //         var totalQuestions = data.body.totalQuestions;
-    //     }),
-    //     this.$http.get(`${api}/game/round/:roundNumber`).then(data => {
-    //        var fiftyFiftyEnabled = data.body.actions.fiftyFifty;
-    //        var callFriendEnabled = data.body.actions.callFriend;
-    //        var askPublicEnabled = data.body.actions.askPublic;
-    //     }) 
-
-    // },
     methods: {
         callFriend() {
-            if(callFriendEnabled == true) {
-                callFriendEnabled = false;
-                callFriendAppear = true;
+            if(this.helperDetails.callAFriend) {
+                this.helperDetails.callAFriend = false;
+                this.callFriendAppear = true;
             }
         },
         askPublic() {
-            if(askPublicEnabled == true) {
-                askPublicEnabled = false;
-                askPublicAppear = true;
+            if(this.helperDetails.askPublic == true) {
+                this.helperDetails.askPublic = false;
+                this.askPublicAppear = true;
             }
         },
         fiftyFifty() {  
-            if(fiftyFiftyEnabled == true) {
-                fiftyFiftyEnabled = false;
-                var count = 0;
-                for(let i = 0; i <= 3 && count <=2;i++ ) {
-                    if( questions[currentQuestion].correctAnswerIndex != i  ) {
-                        count++;
-                        if(count<=2) {
-                            showAnswers[i] = false;
-                        }
-                    }
-                }
+            if(this.helperDetails.fiftyFifty == true) {
+                this.helperDetails.fiftyFifty = false;
+                this.$emit('fiftyFifty');
             }
         },
         callFriendBannerDisappear() {
-            callFriendAppear = false;
+            this.callFriendAppear = false;
         },
         askPublicBannerDisappear() {
-            askPublicAppear = false;
+            this.askPublicAppear = false;
         }
 
     }
@@ -82,12 +62,14 @@ export default {
 
 <style lang="scss" scoped>
 
+.buttons {
+    display: flex;
+    flex-direction: column;
+}
+
 .helping-buttons {
-    display: inline-flex;
-    width: 120px;
-    height:50px;
+    display: flex;
     margin: auto;
-    align-content: space-around;
 }
 
 .call-friend-button {
@@ -112,28 +94,20 @@ export default {
 }
 
 #call-friend-banner-hidden{
-    width: 100px;
     height: 100px;
     border: 2px solid yellow;
-    visibility: hidden;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.call-friend-banner-visible {
-    visibility: visible;
-}
 
 #ask-public-banner-hidden {
-    width: 100px;
     height: 100px;
     border: 2px solid yellow;
-    visibility: hidden;
+    color: #fff;
 }
-
-.ask-public-banner-visible {
-    visibility: visible;
-}
-
-
 
 
 </style>

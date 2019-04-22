@@ -2,14 +2,16 @@
   <div id="app">
     <router-view/>
   </div>
-
-
 </template>
 
+
 <script>
+import api from '@/API.js'
+
+export default {
+}
 
 </script>
-
 
 <style lang="scss">
 #app {

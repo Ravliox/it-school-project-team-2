@@ -1,44 +1,32 @@
 <template>
     <div class= "container">
         <p> Game.vue</p>
-        <HelpingButtons/>
+        <IntrebareRaspuns v-if="!loading" :currentQuestion="currentQuestion"/>
+        <b-loading :is-full-page="true" :active.sync="loading"></b-loading>    
     </div>
-    
 </template>
 
 <script>
-import HelpingButtons from '@/components/HelpingButtons.vue'
 import IntrebareRaspuns from '@/components/IntrebareRaspuns.vue'
-import api from '@API.js'
+import api from '@/API.js'
 export default {
+    components: {
+        IntrebareRaspuns
+    },
     data() {
         return {
-            indexOfNextRound: 0,
-            adminData: [],
-            showAnswers: [true, true, true, true]
+            currentQuestion: 0,
+            loading: true,
+            totalQuestions: 0
         }
     },
     created() {
-        this.$http.get(`${api}/admin`).then(data => {
-
-            var callFriendEnabled = data.body.helperActions.callFriend;
-            var askPublicEnabled = data.body.helperActions.askPublic;
-            var fiftyFiftyEnabled = data.body.helperActions.fiftyFifty;
-            var questions = data.body.questions;
-            var currentQuestion = data.body.currentQuestion;
-        }),
         this.$http.get(`${api}/game/current-round`).then(data => {
-            var currentQuestion = data.body.round.answers;
-            var totalQuestions = data.body.totalQuestions;
-        }),
-        this.$http.get(`${api}/game/round/:roundNumber`).then(data => {
-            var fiftyFiftyEnabled = data.body.actions.fiftyFifty;
-            var callFriendEnabled = data.body.actions.callFriend;
-            var askPublicEnabled = data.body.actions.askPublic;
+            this.currentQuestion = data.body.currentQuestion === null ? 0 : data.body.currentQuestion;
+            this.loading = false;
+            this.totalQuestions = data.body.totalQuestions;
         })
     }
-
- 
 }
 </script>
 
