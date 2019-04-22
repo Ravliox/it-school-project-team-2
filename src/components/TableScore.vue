@@ -32,20 +32,12 @@ export default {
 
         }
     },
-    watch: {
-        'currentQuestion': function (newVal, oldVal) {
-            console.log(newVal, oldVal);
-        }
-    },
     created() {
         var base = 1;
-        console.log(this.currentQuestion);
-        console.log(this.totalQuestions);
         
         for( let i = 0; i < this.totalQuestions; i++ ) {
             this.listOfPrizes.push(i * 100);
         }   
-        // this.listOfPrizes.reverse(); 
     }
 }   
 </script>
