@@ -1,23 +1,31 @@
 <template>
     <div class= "container">
         <p> Game.vue</p>
-        <IntrebareRaspuns v-if="!loading" :currentQuestion="currentQuestion"/>
-        <b-loading :is-full-page="true" :active.sync="loading"></b-loading>    
+        <IntrebareRaspuns @newQuestion="currentQuestion = currentQuestion + 1" v-if="!loading" :currentQuestion="currentQuestion"/>
+        <TableScore :currentQuestion="currentQuestion" v-if="!loading" :totalQuestions="totalQuestions"/>    
+        <b-loading :is-full-page="true" :active.sync="loading"></b-loading>
     </div>
 </template>
 
 <script>
 import IntrebareRaspuns from '@/components/IntrebareRaspuns.vue'
 import api from '@/API.js'
+import TableScore from '@/components/TableScore'
+
 export default {
     components: {
-        IntrebareRaspuns
+        IntrebareRaspuns,
+        TableScore
     },
     data() {
         return {
             currentQuestion: 0,
             loading: true,
-            totalQuestions: 0
+            totalQuestions: 0,
+            score: {
+                current: 0,
+                total: 0
+            }
         }
     },
     created() {
@@ -25,6 +33,8 @@ export default {
             this.currentQuestion = data.body.currentQuestion === null ? 0 : data.body.currentQuestion;
             this.loading = false;
             this.totalQuestions = data.body.totalQuestions;
+            this.score.current = this.currentQuestion;
+            this.score.total = this.totalQuestions;
         })
     }
 }

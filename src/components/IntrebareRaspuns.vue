@@ -57,6 +57,7 @@ export default {
     methods: {
         verificare(index) {
             if(this.correctAnswerIndex == index) {
+                this.$emit('newQuestion');
                 this.currentQuestion = this.currentQuestion + 1; 
                 this.$http.get(`${api}/game/round/${this.currentQuestion}`).then(response  => {
                     this.answers = response.body.round.answers;
